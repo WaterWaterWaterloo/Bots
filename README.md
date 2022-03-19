@@ -1,9 +1,20 @@
 # Bots
+There are two Different applications in this project.
+### 1. signalWireDiscord.py
+### 2. python in.py and python out.py
 
-## SignalWire Bots
+
+
+## SignalWire Bots description
+
+### 1. signalWireDiscord.py
 The bot gets the latest messages from signalwire and posts them in a specified discord chat.
+It does this by checking for new messages in your signalwire account every few minutes.
 The user can also give commands to bot for sending texts messages through discord.
 
+### 2. python in.py and python out.py
+in.py: uses relay Api. Doesnt have to constantly ping signal wire. Signal Wire pushes the message onto this client on its own.
+out.py: similar to signalWireDiscord.py's ability to read commands through discord and send outgoing msgs.
 
 ### What you need
 > Server/ PC running python3.6 minimum
@@ -16,8 +27,14 @@ Run using
 ```bash
 python signalWireDiscord.py
 ```
+Or
+```bash
+python in.py &
+python out.py &
+```
 
 ### Commands
+#### signalWireDiscord.py
 The following commands can be made by user with id in line 33, just by typing in a channel with the bot.
 Note that the bot will reply on channel with id in line 96.
 
@@ -37,3 +54,5 @@ Note that the bot will reply on channel with id in line 96.
 replace the blank with phone number you want to send message to. 
 Message after this that the bot reads will be the body of the text message, which gets sent as soon as recieved.
 
+#### in.py out.py
+ Coming soon
