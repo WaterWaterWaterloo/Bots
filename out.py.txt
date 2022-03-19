@@ -1,0 +1,68 @@
+import discord
+from discord.ext import tasks
+from signalwire.rest import Client as signalwire_client
+import os
+
+sclient = signalwire_client(os.environ.get('PROJECT_ID_HERE'), os.environ.get('YOURKEY_HERE'), signalwire_space_url = os.environ.get('YOUR_SIGNALWIREURL_HERE'))
+TOKEN = os.environ.get('YOUR_DISCORD_Bot_API_Key')
+
+
+client = discord.Client()
+
+state = 0 # if 1, next message in chat is messages body
+messagelist = []
+
+
+@client.event
+async def on_ready():
+    print('We have successfully loggged in as {0.user}'.format(client))
+
+@client.event
+async def on_message(message):
+    global state
+   
+    global messagelist
+    if message.author == client.user:
+        return
+    
+    #if message.author.id != xxxxxxxxxxxxxxxxxxxxxxxx: # your disocrd ID #. It's a unique number. THis if statement is optional, for Security only
+    #    return
+
+    if message.content.lower() == 'hello':
+        await message.channel.send(f'Hello!!, {message.author.display_name}!')
+        return
+    if message.content.lower() == 'help':
+        await message.channel.send(f'type number _______, and then body time')
+        return
+    if message.content.lower() == 'cancel':
+        await message.channel.send(f'cancelled')
+        state = 0     
+        messagelist = []
+        return
+    if message.content.lower() == 'status':
+        if(len(messagelist)==0 and state == 0):
+            await message.channel.send(f'empty')
+        else:
+            await message.channel.send(f'not empty, first num is ' + messagelist[0])
+        return
+
+    msgbody = message.content.lower().split()
+    if(msgbody):
+        if(msgbody[0] == 'number' and len(msgbody) ==2): # we got the num command, store the TO number, 
+            messagelist.append(msgbody[1])
+            state = 1 # next call is expected to be msg body
+            await message.channel.send(f'write body')
+            return
+
+    if(state ==1 and messagelist): # state is 1, this  is body of text msg
+        await sclient.messages.create(
+                              from_= xxxxxxxxxx, # eg. '+12345678910'
+                              body=message.content,
+                              to=messagelist[0]
+                          )
+        await message.channel.send(f'sent')
+        state = 0
+        messagelist = []
+        return
+    
+client.run(TOKEN)

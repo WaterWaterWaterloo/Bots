@@ -1,0 +1,29 @@
+from signalwire.relay.consumer import Consumer
+
+from discord import Webhook, AsyncWebhookAdapter
+import aiohttp
+from datetime import datetime
+import pytz
+import os
+from signalwire.relay.messaging.send_result
+est = pytz.timezone('US/Eastern')
+proje=''
+toke=''
+
+class CustomConsumer(Consumer):
+  def setup(self):
+    self.project = proje
+    self.token = toke
+    self.contexts = ['context']
+
+  async def on_incoming_message(self, message):
+    print('Handle inbound message')
+
+   
+    print("|" + message.direction + "|" + message.from_number + "|" + "\n" + message.body)
+
+  async def on_message_state_change(self, message):
+    print("|" + message.direction + "|" + message.to_number + "|" + "\n" + message.state)
+
+consumer = CustomConsumer()
+consumer.run()
